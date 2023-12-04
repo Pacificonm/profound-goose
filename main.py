@@ -4,6 +4,9 @@ import config
 import discord
 from discord.ext import commands
 
+# Profound Goose
+# Version 1.0.0
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s:%(levelname)s:%(name)s: %(message)s')
 
 # set up intents

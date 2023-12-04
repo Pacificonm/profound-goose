@@ -1,3 +1,6 @@
+import datetime
+import logging
+
 from discord.ext import commands, tasks
 from gpt_setup import GPT
 
@@ -5,8 +8,9 @@ from gpt_setup import GPT
 class TaskCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.wisdom_message.start()
 
-    @tasks.loop(hours=24)
+    @tasks.loop(time=datetime.time(hour=8, minute=0, second=0)) # 8:00 AM UTC == 3:00 AM EST
     async def wisdom_message(self):
         channel = self.bot.get_channel(1179978297560535163)  # Replace with your channel ID
         try:
@@ -21,15 +25,11 @@ class TaskCog(commands.Cog):
                 ]
             )
 
-            print("SENDING GPT REQUEST")
+            logging.debug("SENDING GPT REQUEST")
             # Send the response back as a Discord message
             await channel.send(response.choices[0].message.content.strip('"'))
         except Exception as e:
             await channel.send(f'Error: {str(e)}')
-
-    # @commands.Cog.listener()
-    # async def on_ready(self):
-    #     self.wisdom_message.start()
 
 
 async def setup(bot):
