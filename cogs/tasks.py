@@ -3,8 +3,7 @@ import logging
 
 from discord.ext import commands, tasks
 import goose
-
-GOOSE_WISDOM = 1181051538278469783
+from config import GOOSE_WISDOM
 
 
 class TaskCog(commands.Cog):
@@ -12,13 +11,17 @@ class TaskCog(commands.Cog):
         self.bot = bot
         self.wisdom_message.start()
 
-    @tasks.loop(time=datetime.time(hour=8, minute=0, second=0))  # 8:00 AM UTC == 3:00 AM EST
+    @tasks.loop(time=datetime.time(hour=12, minute=0, second=0))  # 12:00 PA UTC == 7:00 AM EST
     async def wisdom_message(self):
         channel = self.bot.get_channel(GOOSE_WISDOM)
 
-        proverb = goose.create_proverb()
+        proverb = await goose.create_proverb()
 
         await channel.send(proverb)
+
+    @wisdom_message.before_loop
+    async def before_wisdom_message(self):
+        await self.bot.wait_until_ready()
 
 
 async def setup(bot):
