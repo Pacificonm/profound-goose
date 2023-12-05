@@ -5,7 +5,7 @@ import discord
 from discord.ext import commands
 
 # Profound Goose
-# Version 1.0.0
+# Version 1.1.0
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s:%(levelname)s:%(name)s: %(message)s')
 

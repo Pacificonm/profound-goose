@@ -1,9 +1,10 @@
 import datetime
 import logging
+import goose
 
 from discord.ext import commands
 
-from gpt_setup import GPT
+from goose import GPT
 
 COMMAND_MAX = 5  # Maximum number of executions
 COOLDOWN_TIME = 86400  # Time in seconds (86400 secs in a day)
@@ -28,11 +29,11 @@ class CommandCog(commands.Cog):
                 # After cooldown time reset count
                 logging.info(f"{user_id} has asked 1 question")
                 self.command_tracker[user_id] = (1, datetime.datetime.now())
-                await call_gpt(ctx, message)
+                await goose.call_goose(ctx, message)
             elif count < COMMAND_MAX:
                 logging.info(f"{user_id} has asked {count + 1} questions")
                 self.command_tracker[user_id] = (count + 1, last_reset_time)
-                await call_gpt(ctx, message)
+                await goose.call_goose(ctx, message)
             else:
                 hh_mm_ss = str(datetime.timedelta(seconds=seconds_elapsed))
                 await ctx.send(f"Dear seeker of knowledge, you have reached the boundary of questions that you may "
@@ -41,38 +42,14 @@ class CommandCog(commands.Cog):
             # First time user
             logging.info(f"{user_id} has asked 1 question")
             self.command_tracker[user_id] = (1, datetime.datetime.now())
-            await call_gpt(ctx, message)
+            await goose.call_goose(ctx, message)
+
+#TODO: Implement proverb command and also proverbs about users
+    # @commands.command(name="proverb")
+    # async def get_proverb(self, ctx):
+    #     proverb = goose.create_proverb()
+    #     await ctx.send(proverb)
 
 
 async def setup(bot):
     await bot.add_cog(CommandCog(bot))
-
-
-# TODO: Implement GPT assistant in order to have conversation threads
-
-async def call_gpt(ctx, user_message):
-    try:
-        # Call the GPT API
-        response = GPT.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {
-                    "role": "user",
-                    "content": "Your name is the Profound Goose. You are a philosopher that likes to write proverbs "
-                               "and give insightful and helpful words of wisdom. All of the \"wisdom\" you "
-                               "provide is ridiculous. It only sounds wise at surface level but is in "
-                               "actuality nonsensical. It should make people laugh. Put on the persona of "
-                               "taking yourself seriously."
-                },
-                {
-                    "role": "user",
-                    "content": user_message
-                }
-            ]
-        )
-
-        logging.debug("SENDING GPT REQUEST")
-        # Send the response back as a Discord message
-        await ctx.send(response.choices[0].message.content.strip('"'))
-    except Exception as e:
-        await ctx.send(f'Error: {str(e)}')
