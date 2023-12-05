@@ -29,11 +29,11 @@ class CommandCog(commands.Cog):
                 # After cooldown time reset count
                 logging.info(f"{user_id} has asked 1 question")
                 self.command_tracker[user_id] = (1, datetime.datetime.now())
-                await goose.call_goose(ctx, message)
+                await ctx.send(goose.call_goose(ctx, message))
             elif count < COMMAND_MAX:
                 logging.info(f"{user_id} has asked {count + 1} questions")
                 self.command_tracker[user_id] = (count + 1, last_reset_time)
-                await goose.call_goose(ctx, message)
+                await ctx.send(goose.call_goose(ctx, message))
             else:
                 hh_mm_ss = str(datetime.timedelta(seconds=seconds_elapsed))
                 await ctx.send(f"Dear seeker of knowledge, you have reached the boundary of questions that you may "
@@ -42,7 +42,7 @@ class CommandCog(commands.Cog):
             # First time user
             logging.info(f"{user_id} has asked 1 question")
             self.command_tracker[user_id] = (1, datetime.datetime.now())
-            await goose.call_goose(ctx, message)
+            await ctx.send(goose.call_goose(ctx, message))
 
 #TODO: Implement proverb command and also proverbs about users
     # @commands.command(name="proverb")
