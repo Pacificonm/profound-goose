@@ -33,7 +33,8 @@ class CommandCog(commands.Cog):
             logging.info(f"Admin {username} has asked a question")
             response = await goose.call_goose(ctx, message)
             await ctx.send(response)
-        if user_id in self.command_tracker:
+            return
+        elif user_id in self.command_tracker:
             count, last_reset_time = self.command_tracker[user_id]
             seconds_elapsed = (datetime.datetime.now() - last_reset_time).total_seconds()
 

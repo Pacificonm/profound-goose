@@ -15,7 +15,7 @@ class TaskCog(commands.Cog):
     async def wisdom_message(self):
         channel = self.bot.get_channel(GOOSE_WISDOM)
 
-        proverb = await goose.create_proverb()
+        proverb = await goose.create_proverb(self.bot)
 
         await channel.send(proverb)
 

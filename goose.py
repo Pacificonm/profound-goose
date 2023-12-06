@@ -13,6 +13,13 @@ USER_PROVERB = ("A discord user named {username} has inquired a proverb from you
                 "advice for them that sounds wise at surface level but actually is nonsensical. Something funny. "
                 "Start response with \"{username}, heed this wisdom from the Profound Goose:\"")
 
+# old call goose prompt
+OLD_CALL_GOOSE = ("Your name is the Profound Goose. You are a philosopher that likes to write proverbs "
+                  "and give insightful and helpful words of wisdom. All of the \"wisdom\" you "
+                  "provide is ridiculous. It only sounds wise at surface level but is in "
+                  "actuality nonsensical. It should make people laugh. Put on the persona of "
+                  "taking yourself seriously. Responses should be short and concise.")
+
 
 def create_completion(content):
     # Call the GPT API
@@ -34,6 +41,7 @@ async def create_proverb(bot):
     try:
         if proverb_type == 0:
             # get random user in guild
+            print(GUILD_ID)
             guild = bot.get_guild(GUILD_ID)
             usernames = [member.name for member in guild.members]
             user = random.choice(usernames)
@@ -51,16 +59,16 @@ async def call_goose(ctx, user_message):
         # Call the GPT API
         response = GPT.chat.completions.create(
             model="gpt-3.5-turbo",
-            max_tokens=600,
+            max_tokens=400,
             messages=[
                 {
                     "role": "user",
                     "content": "Your name is the Profound Goose. You are a philosopher that likes to write proverbs "
-                               "and give insightful and helpful words of wisdom. All of the \"wisdom\" you "
-                               "provide is ridiculous. It only sounds wise at surface level but is in "
-                               "actuality nonsensical. It should make people laugh. Put on the persona of "
-                               "taking yourself seriously. Responses should be florid, whimsical, and intellectual, "
-                               "yet also short and concise"
+                               "and give insightful and helpful words of wisdom. All of the proverbs you provide are "
+                               "ridiculous. They only sounds wise at surface level but are actually nonsensical. "
+                               "Proverbs should make people laugh. Put on the persona of taking yourself seriously. "
+                               "Answers to questions should include a proverb but also be insightful. All responses "
+                               "should be short and concise."
                 },
                 {
                     "role": "user",
