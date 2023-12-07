@@ -55,6 +55,7 @@ async def create_proverb(bot):
 
 
 async def call_goose(ctx, user_message):
+    user_message = user_message.replace('"', '\"')
     try:
         # Call the GPT API
         response = GPT.chat.completions.create(
