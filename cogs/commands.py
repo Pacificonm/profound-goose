@@ -60,16 +60,53 @@ class CommandCog(commands.Cog):
             response = await goose.call_goose(ctx, message)
             await ctx.send(response)
 
-    # TODO: Make proverb command public
-    @commands.command(name="proverb")
+    @commands.command(name="gooseProverb")
     async def get_proverb(self, ctx):
-        user_id = ctx.author.id
-        if user_id in ADMIN_IDS:
+        can_execute = verify_prompt_limit(ctx)
+        if can_execute:
             proverb = await goose.create_proverb(self.bot)
             await ctx.send(proverb)
+
+    async def is_admin(self, ctx):
+        user_id = ctx.author.id
+        if user_id in ADMIN_IDS:
+            return True
         else:
             await ctx.send(f"Apologies, dear {ctx.author.name}, but it appears the command you seek to wield is "
                            f"elusive to those entitled admin")
+            return False
+            
+    async def verify_prompt_limit(self, ctx):
+        user_id = ctx.author.id
+        username = ctx.author.name
+
+        # No command limit if admin
+        if user_id in ADMIN_IDS:
+            logging.info(f"Admin {username} has asked a question")
+            return True
+        elif user_id in self.command_tracker:
+            count, last_reset_time = self.command_tracker[user_id]
+            seconds_elapsed = (datetime.datetime.now() - last_reset_time).total_seconds()
+
+            if seconds_elapsed >= COOLDOWN_TIME:
+                # After cooldown time reset count
+                logging.info(f"{username} has asked 1 question")
+                self.command_tracker[user_id] = (1, datetime.datetime.now())
+                return True
+            elif count < COMMAND_MAX:
+                logging.info(f"{username} has asked {count + 1} questions")
+                self.command_tracker[user_id] = (count + 1, last_reset_time)
+                return True
+            else:
+                hh_mm_ss = str(datetime.timedelta(seconds=seconds_elapsed))
+                await ctx.send(f"Dear seeker of knowledge, you have reached the boundary of questions that you may "
+                               f"ask of me. Return in {hh_mm_ss} for more profound ponderings.")
+                return False
+        else:
+            # First time user
+            logging.info(f"{username} has asked 1 question")
+            self.command_tracker[user_id] = (1, datetime.datetime.now())
+            return True
 
 
 async def setup(bot):

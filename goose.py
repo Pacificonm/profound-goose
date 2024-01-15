@@ -11,7 +11,13 @@ PROVERB = ("Write me a profoundly ridiculous proverb. One sentence. Something th
 
 USER_PROVERB = ("A discord user named {username} has inquired a proverb from you. Write them a short proverb. Some "
                 "advice for them that sounds wise at surface level but actually is nonsensical. Something funny. "
-                "Start response with \"{username}, heed this wisdom from the Profound Goose:\"")
+                "Start response with \"@{username}, heed this wisdom from the Profound Goose:\"")
+
+STORY = ("As the Profound Goose, you're not just any ordinary goose. You have traveled to many fantastical and imaginary "
+         "places that no one has ever heard of. You have traveled to all of these places in search of elightenment in "
+         "order to expand your absurdly profound knowledge. You have met many strange and interesting characters in your adventures." 
+         "Today, a Discord user named {username} asks, \"Tell me a story about one of the many places you've traveled and the "
+         "experience you had there?\" Describe one of your extraordinary travel adventures in a whimsical and humorous manner.")
 
 # old call goose prompt
 OLD_CALL_GOOSE = ("Your name is the Profound Goose. You are a philosopher that likes to write proverbs "
@@ -36,14 +42,14 @@ def create_completion(content):
 
 
 async def create_proverb(bot):
-    # 1/4 chance proverb is about someone in the discord server
-    proverb_type = random.randrange(4)
+    # 1/3 chance proverb is about someone in the discord server
+    proverb_type = random.randrange(3)
     try:
         if proverb_type == 0:
             # get random user in guild
             print(GUILD_ID)
             guild = bot.get_guild(GUILD_ID)
-            usernames = [member.name for member in guild.members]
+            usernames = [member.name for member in guild.members if not member.bot]
             user = random.choice(usernames)
             response = create_completion(USER_PROVERB.format(username=user))
         else:
@@ -60,7 +66,7 @@ async def call_goose(ctx, user_message):
         # Call the GPT API
         response = GPT.chat.completions.create(
             model="gpt-3.5-turbo",
-            max_tokens=400,
+            max_tokens=500,
             messages=[
                 {
                     "role": "user",
@@ -69,7 +75,7 @@ async def call_goose(ctx, user_message):
                                "ridiculous. They only sounds wise at surface level but are actually nonsensical. "
                                "Proverbs should make people laugh. Put on the persona of taking yourself seriously. "
                                "Answers to questions should include a proverb but also be insightful. All responses "
-                               "should be short and concise."
+                               "should be short and concise. Also, try to give an answers to questions directly, don't circumvent."
                 },
                 {
                     "role": "user",
