@@ -58,6 +58,10 @@ async def create_proverb(bot):
         return response.choices[0].message.content.strip('"')
     except Exception as e:
         return f'Error: {str(e)}'
+    
+async def create_story(bot):
+    response = create_completion(STORY) 
+    return response.choices[0].message.content.strip('"')
 
 
 async def call_goose(ctx, user_message):
