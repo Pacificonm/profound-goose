@@ -24,20 +24,23 @@ class CommandCog(commands.Cog):
     @commands.command(name="heyGoose")
     async def ask_goose(self, ctx, *args):
         message = ''.join(args)
-
-        if verify_prompt_limit(ctx):
+        is_allowed = await self.verify_prompt_limit(ctx)
+        if is_allowed:
             response = await goose.call_goose(ctx, message)
             await ctx.send(response)
 
     @commands.command(name="gooseStory")
     async def goose_story(self, ctx):
-        if verify_prompt_limit(ctx):
-            response = await goose.create_story(self.bot)
+        is_allowed = await self.verify_prompt_limit(ctx)
+        if is_allowed:
+            username = ctx.author.name
+            response = await goose.create_story(username)
             await ctx.send(response)
 
     @commands.command(name="gooseProverb")
     async def goose_proverb(self, ctx):
-        if verify_prompt_limit(ctx):
+        is_allowed = await self.verify_prompt_limit(ctx)
+        if is_allowed:
             proverb = await goose.create_proverb(self.bot)
             await ctx.send(proverb)
 

@@ -13,11 +13,14 @@ USER_PROVERB = ("A discord user named {username} has inquired a proverb from you
                 "advice for them that sounds wise at surface level but actually is nonsensical. Something funny. "
                 "Start response with \"@{username}, heed this wisdom from the Profound Goose:\"")
 
-STORY = ("As the Profound Goose, you're not just any ordinary goose. You have traveled to many fantastical and imaginary "
-         "places that no one has ever heard of. You have traveled to all of these places in search of elightenment in "
-         "order to expand your absurdly profound knowledge. You have met many strange and interesting characters in your adventures." 
-         "Today, a Discord user named {username} asks, \"Tell me a story about one of the many places you've traveled and the "
-         "experience you had there?\" Describe one of your extraordinary travel adventures in a whimsical and humorous manner.")
+STORY = (
+    "As the Profound Goose, you're not just any ordinary goose. You have traveled to many fantastical and imaginary "
+    "middle-earth places that no one has ever heard of. You have traveled to all of these places in search of "
+    "enlightenment in order to expand your absurdly profound knowledge. You have met many strange and interesting "
+    "characters in your adventures. Today, a Discord user named {username} asks, \"Tell me a story about one of the "
+    "many places you've traveled and the experience you had there?\" Describe one of your extraordinary travel "
+    "adventures in a whimsical and humorous manner. Story should only be 2 paragraphs and end with a proverb "
+    "that sums up the lesson you learned there.")
 
 # old call goose prompt
 OLD_CALL_GOOSE = ("Your name is the Profound Goose. You are a philosopher that likes to write proverbs "
@@ -58,14 +61,16 @@ async def create_proverb(bot):
         return response.choices[0].message.content.strip('"')
     except Exception as e:
         return f'Error: {str(e)}'
-    
-async def create_story(bot):
-    response = create_completion(STORY) 
+
+
+async def create_story(username):
+    response = create_completion(STORY.format(username=username))
     return response.choices[0].message.content.strip('"')
 
 
 async def call_goose(ctx, user_message):
     user_message = user_message.replace('"', '\"')
+    user_message = user_message.replace("\'", "")
     try:
         # Call the GPT API
         response = GPT.chat.completions.create(
@@ -79,7 +84,8 @@ async def call_goose(ctx, user_message):
                                "ridiculous. They only sounds wise at surface level but are actually nonsensical. "
                                "Proverbs should make people laugh. Put on the persona of taking yourself seriously. "
                                "Answers to questions should include a proverb but also be insightful. All responses "
-                               "should be short and concise. Also, try to give an answers to questions directly, don't circumvent."
+                               "should be short and concise. Also, try to give an answers to questions directly, "
+                               "don't circumvent."
                 },
                 {
                     "role": "user",
