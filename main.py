@@ -7,7 +7,7 @@ from discord.ext import commands
 from fileManager import save_command_tracker
 
 # Profound Goose
-# Version 1.3.2
+# Version 1.4.0
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s:%(levelname)s:%(name)s: %(message)s')
 

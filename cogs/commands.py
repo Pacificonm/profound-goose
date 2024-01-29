@@ -26,8 +26,13 @@ class CommandCog(commands.Cog):
         message = ''.join(args)
         is_allowed = await self.verify_prompt_limit(ctx)
         if is_allowed:
-            response = await goose.call_goose(ctx, message)
-            await ctx.send(response)
+            if ctx.message.attachments:
+                logging.info("Goose question contains attachment")
+                response = await goose.call_goose_attachment(ctx, message)
+                await ctx.send(response)
+            else:
+                response = await goose.call_goose(ctx, message)
+                await ctx.send(response)
 
     @commands.command(name="gooseStory")
     async def goose_story(self, ctx):
