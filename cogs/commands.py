@@ -41,7 +41,7 @@ class CommandCog(commands.Cog):
     async def goose_proverb(self, ctx):
         is_allowed = await self.verify_prompt_limit(ctx)
         if is_allowed:
-            proverb = await goose.create_proverb(self.bot)
+            proverb = await goose.create_proverb()
             await ctx.send(proverb)
 
     async def is_admin(self, ctx):

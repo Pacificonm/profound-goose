@@ -1,5 +1,4 @@
 import datetime
-import logging
 
 from discord.ext import commands, tasks
 import goose
@@ -15,7 +14,7 @@ class TaskCog(commands.Cog):
     async def wisdom_message(self):
         channel = self.bot.get_channel(GOOSE_WISDOM)
 
-        proverb = await goose.create_proverb(self.bot)
+        proverb = await goose.create_daily_proverb(self.bot)
 
         await channel.send(proverb)
 
