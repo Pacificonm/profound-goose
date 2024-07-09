@@ -2,3 +2,5 @@
 __pycache__/
 .env
 profilepic.png
+command_tracker.json
+thread_log.json

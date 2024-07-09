@@ -4,10 +4,33 @@ import config
 import discord
 from discord.ext import commands
 
-from fileManager import save_command_tracker
+from goose import goose_service
+from fileManager import save_file
+
 
 # Profound Goose
-# Version 1.4.0
+# Version 2.0.0
+
+class MyBot(commands.Bot):
+
+    # Override close method to shut down gracefully
+    async def close(self):
+        logging.info("Gracefully shutting down")
+        command_cog = self.get_cog("CommandCog")
+
+        # Save command tracker
+        logging.debug("Saving command tracker")
+        if command_cog:
+            command_tracker = command_cog.get_command_tracker()
+            save_file(command_tracker, config.COMMAND_TRACKER_FILENAME)
+
+        # Save threads
+        logging.debug("Saving thread log")
+        thread_log = goose_service.get_thread_log()
+        save_file(thread_log, config.THREAD_LOG_FILENAME)
+
+        await super().close()
+
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s:%(levelname)s:%(name)s: %(message)s')
 
@@ -16,7 +39,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 
-bot = commands.Bot(command_prefix='.', intents=intents)
+bot = MyBot(command_prefix='.', intents=intents)
 
 
 # load cogs
@@ -36,25 +59,5 @@ async def on_ready():
     logging.info(f'Logged in as {bot.user}')
 
 
-# TODO: Get file writer working on bot exit. Currently does not save tracker dic on app close
-
-# @bot.event
-# async def on_disconnect():
-#     cog = bot.get_cog("cogs.commands")
-#     if cog:
-#         tracker = cog.get_command_tracker()
-#         save_command_tracker(tracker)
-#     logging.critical("Bot disconnected")
-
-
-
 # Start bot
-try:
-    bot.run(config.DISCORD_TOKEN)
-except KeyboardInterrupt:
-    logging.error("INTERRUPT")
-    command_cog = bot.get_cog("cogs.commands")
-    if command_cog:
-        command_tracker = command_cog.get_command_tracker()
-        save_command_tracker(command_tracker)
-    bot.close()
+bot.run(config.DISCORD_TOKEN)

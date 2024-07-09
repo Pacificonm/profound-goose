@@ -1,7 +1,7 @@
 import datetime
 
 from discord.ext import commands, tasks
-import goose
+from goose import goose_service
 from config import GOOSE_WISDOM
 
 
@@ -10,11 +10,11 @@ class TaskCog(commands.Cog):
         self.bot = bot
         self.wisdom_message.start()
 
-    @tasks.loop(time=datetime.time(hour=12, minute=0, second=0))  # 12:00 PA UTC == 7:00 AM EST
+    @tasks.loop(time=datetime.time(hour=12, minute=0, second=0))  # 12:00 PM UTC == 7:00 AM EST
     async def wisdom_message(self):
         channel = self.bot.get_channel(GOOSE_WISDOM)
 
-        proverb = await goose.create_daily_proverb(self.bot)
+        proverb = await goose_service.create_daily_proverb(self.bot)
 
         await channel.send(proverb)
 
