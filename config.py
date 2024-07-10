@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DISCORD_TOKEN = os.getenv('DISCORD_KEY_TEST')
+DISCORD_TOKEN = os.getenv('DISCORD_KEY')
 GPT_KEY = os.getenv('GPT_API_KEY')
 GOOSE_ASSISTANT_ID = os.getenv('GOOSE_ASSISTANT_ID')
 
