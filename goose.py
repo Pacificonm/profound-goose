@@ -121,11 +121,13 @@ class GooseService:
             self.thread_log[thread_log_key] = (thread_id, thread_size + 1)
             return response.strip('"')
         else:
-            # Delete thread
-            await self.delete_thread_log(thread_log_key)
             # Create new thread
-            logging.debug("Creating new thread")
+            logging.info("Creating new thread")
             thread_id = await GptUtilities.create_thread()
+            # Add last four messages to new thread
+            await self.add_memory_to_thread(thread_id, thread_log_key)
+            # Delete old thread
+            await self.delete_thread_log(thread_log_key)
             if attachment_url is None:
                 response = await self.query_thread(thread_id, query)
             else:
@@ -133,26 +135,37 @@ class GooseService:
             self.thread_log[thread_log_key] = (thread_id, 1)
             return response.strip('"')
 
+    async def add_memory_to_thread(self, new_thread_id, thread_log_key):
+        if thread_log_key in self.thread_log:
+            old_thread_id, thread_size = self.thread_log[thread_log_key]
+            try:
+                logging.info("Getting thread messages")
+                message_list = await GptUtilities.get_thread_messages(old_thread_id, 4)
+                logging.info("Adding memory messages")
+                await GptUtilities.add_multiple_messages(new_thread_id, message_list)
+            except Exception as e:
+                return f'Error: {str(e)}'
+
     async def query_thread_attachment(self, thread_id, query, attachment_url):
         try:
-            logging.debug("Adding message with attachment")
+            logging.info("Adding message with attachment")
             await GptUtilities.add_attachment_message(thread_id, query, attachment_url)
-            logging.debug("Running thread")
+            logging.info("Running thread")
             return await GptUtilities.run_thread_get_response(thread_id, config.GOOSE_ASSISTANT_ID)
         except Exception as e:
             return f'Error: {str(e)}'
 
     async def query_thread(self, thread_id, query):
         try:
-            logging.debug("Adding message")
-            await GptUtilities.add_message(thread_id, query)
-            logging.debug("Running thread")
+            logging.info("Adding message")
+            await GptUtilities.add_single_message(thread_id, query)
+            logging.info("Running thread")
             return await GptUtilities.run_thread_get_response(thread_id, config.GOOSE_ASSISTANT_ID)
         except Exception as e:
             return f'Error: {str(e)}'
 
     def verify_thread_size(self, thread_log_key):
-        logging.debug("Verifying thread size")
+        logging.info("Verifying thread size")
         if thread_log_key in self.thread_log:
             thread_id, thread_size = self.thread_log[thread_log_key]
             if int(thread_size) < MAX_THREAD_SIZE:
@@ -163,8 +176,8 @@ class GooseService:
             return False
 
     async def delete_thread_log(self, thread_log_key):
-        logging.debug("Deleting thread")
         if thread_log_key in self.thread_log:
+            logging.info("Deleting old thread")
             thread_id, thread_size = self.thread_log[thread_log_key]
             await GptUtilities.delete_thread(thread_id)
 

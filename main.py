@@ -9,7 +9,7 @@ from fileManager import save_file
 
 
 # Profound Goose
-# Version 2.0.0
+# Version 2.0.1
 
 class MyBot(commands.Bot):
 
