@@ -57,7 +57,8 @@ class GooseService:
 
         if proverb_type <= 2:
             # Write normal proverb
-            return await self.get_goose_response(prompts.PROVERB, None, PROVERB_THREAD)
+            proverb_prompt = random.choice(prompts.DAILY_PROVERBS)
+            return await self.get_goose_response(proverb_prompt, None, PROVERB_THREAD)
         else:
             # Write proverb for random user in guild
             guild = bot.get_guild(GUILD_ID)

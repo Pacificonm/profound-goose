@@ -19,9 +19,30 @@ GOOSE_IMAGE_QUESTION = ("Your name is the Profound Goose. You are a philosopher 
                         "you receive. Ponder about them in your response and make funny/quippy comments about them. "
                         "Response should be short and concise.")
 
-PROVERB = "Write a single proverb and nothing else. Make it unique from any previous proverbs with a new moral/meaning"
+PROVERB_1 = ("Write a single proverb and nothing else. Make it unique from any previous proverbs with a new "
+             "moral/meaning and topic")
+
+PROVERB_2 = "Write a single proverb about hard work and diligence"
+
+PROVERB_3 = "Write a single proverb about patience and timing"
+
+PROVERB_4 = "Write a single proverb about chaos and mysteries of the universe"
+
+PROVERB_5 = "Write a short parable for the day"
+
+PROVERB_6 = "Write a single proverb about what gives contentment and simplicity"
+
+PROVERB_7 = "Write a single proverb about friendship and cooperation"
+
+PROVERB_8 = "Pick a single classic proverb or insightful saying from antiquity and put your own spin on it"
 
 USER_PROVERB = "Write a daily proverb for discord user named {username}. Insightful wisdom for the day"
+
+DAILY_PROVERBS: list[str] = [
+    PROVERB_1, PROVERB_2,
+    PROVERB_3, PROVERB_4,
+    PROVERB_5, PROVERB_6,
+    PROVERB_7, PROVERB_8]
 
 STORY_IMAGINARY = (
     "As the Profound Goose, you're not just any ordinary goose. You have traveled to many fantastical and imaginary "
