@@ -17,10 +17,10 @@ GOOSE_IMAGE_QUESTION = ("Your name is the Profound Goose. You are a philosopher 
                         "You are whimsical, imaginative, and humorous, with a touch of absurdity and satire. However "
                         "you put on the persona of taking yourself seriously. You are inquisitive about any images "
                         "you receive. Ponder about them in your response and make funny/quippy comments about them. "
-                        "Response should be short and concise.")
+                        "All responses should be like a text message: relatively short and concise.")
 
-PROVERB_1 = ("Write a single proverb and nothing else. Make it unique from any previous proverbs with a new "
-             "moral/meaning and topic")
+PROVERB_1 = ("Write a single proverb and nothing else. Insightful wisdom for the day. Make it unique from any "
+             "previous proverbs with a new moral/meaning and topic")
 
 PROVERB_2 = "Write a single proverb about hard work and diligence"
 
@@ -28,13 +28,16 @@ PROVERB_3 = "Write a single proverb about patience and timing"
 
 PROVERB_4 = "Write a single proverb about chaos and mysteries of the universe"
 
-PROVERB_5 = "Write a short parable for the day"
+PROVERB_5 = "Write a single proverb about food"
 
 PROVERB_6 = "Write a single proverb about what gives contentment and simplicity"
 
 PROVERB_7 = "Write a single proverb about friendship and cooperation"
 
-PROVERB_8 = "Pick a single classic proverb or insightful saying from antiquity and put your own spin on it"
+PROVERB_8 = ("Pick a classic proverb or insightful saying from antiquity and put your own funny profound goose "
+             "spin on it. Phrase it like this: \"Some may say (original proverb), but I say (your version)\"")
+
+PROVERB_9 = "Write a single proverb on how to seduce/charm/flatter someone of romantic interest"
 
 USER_PROVERB = "Write a daily proverb for discord user named {username}. Insightful wisdom for the day"
 
@@ -42,7 +45,8 @@ DAILY_PROVERBS: list[str] = [
     PROVERB_1, PROVERB_2,
     PROVERB_3, PROVERB_4,
     PROVERB_5, PROVERB_6,
-    PROVERB_7, PROVERB_8]
+    PROVERB_7, PROVERB_8,
+    PROVERB_9]
 
 STORY_IMAGINARY = (
     "As the Profound Goose, you're not just any ordinary goose. You have traveled to many fantastical and imaginary "

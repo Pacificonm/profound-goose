@@ -28,7 +28,8 @@ class CommandCog(commands.Cog):
     def get_command_tracker(self):
         return self.command_tracker
 
-    @commands.command(name="heyGoose")
+    @commands.command(name="heyGoose", help="Say anything you like to the Goose and he will respond. Image "
+                                            "attachments are supported.")
     async def ask_goose(self, ctx, *args):
         message = ' '.join(args)
         is_allowed = await self.verify_prompt_limit(ctx)
@@ -42,7 +43,7 @@ class CommandCog(commands.Cog):
                 response = await goose_service.call_goose(ctx, message, username)
                 await ctx.send(response)
 
-    @commands.command(name="gooseStory")
+    @commands.command(name="gooseStory", help="The Goose tells a story about himself. Memory not supported.")
     async def goose_story(self, ctx):
         is_allowed = await self.verify_prompt_limit(ctx)
         if is_allowed:
@@ -50,12 +51,22 @@ class CommandCog(commands.Cog):
             response = await goose_service.create_story(username)
             await ctx.send(response)
 
-    @commands.command(name="gooseProverb")
+    @commands.command(name="gooseProverb", help="The Goose responds with a proverb. Memory not supported.")
     async def goose_proverb(self, ctx):
         is_allowed = await self.verify_prompt_limit(ctx)
         if is_allowed:
             proverb = await goose_service.create_proverb()
             await ctx.send(proverb)
+
+    @commands.command(name="help", help="Displays all commands with descriptions.")
+    async def custom_help(self, ctx):
+        command_list = sorted([
+            f".{command.name} - {command.help}" for command in self.bot.commands
+        ])
+        # Join each formatted command into a single string
+        commands_string = "\n\n".join(command_list)
+        # Send the formatted list to the user
+        await ctx.send(f"Command list:\n```{commands_string}```")
 
     async def is_admin(self, ctx):
         user_id = ctx.author.id

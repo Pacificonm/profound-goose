@@ -58,17 +58,21 @@ class GooseService:
         if proverb_type <= 2:
             # Write normal proverb
             proverb_prompt = random.choice(prompts.DAILY_PROVERBS)
+            logging.info(f"Creating daily proverb from prompt:\n{proverb_prompt}")
             return await self.get_goose_response(proverb_prompt, None, PROVERB_THREAD)
         else:
             # Write proverb for random user in guild
             guild = bot.get_guild(GUILD_ID)
             usernames = [member.name for member in guild.members if not member.bot]
             user = random.choice(usernames)
+            logging.info(f"Creating daily proverb for user: {user}")
             return await self.get_goose_response(prompts.USER_PROVERB.format(username=user), None, PROVERB_THREAD)
 
     async def create_proverb(self):
         try:
-            response = self.create_single_completion(prompts.PROVERB)
+            proverb_prompt = f"{prompts.GOOSE_QUESTION} {random.choice(prompts.DAILY_PROVERBS)}"
+            logging.info(f"Creating proverb from prompt:\n{proverb_prompt}")
+            response = self.create_single_completion(proverb_prompt)
             return response.choices[0].message.content.strip('"')
         except Exception as e:
             return f'Error: {str(e)}'

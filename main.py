@@ -39,7 +39,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 
-bot = MyBot(command_prefix='.', intents=intents)
+bot = MyBot(command_prefix='.', intents=intents, help_command=None)
 
 
 # load cogs
